@@ -43,7 +43,8 @@ def parens_match_iterative(mylist):
     False
     """
     ### TODO
-    pass
+    # returns whether or not the parentheses are matchings
+    return iterate(parens_update, 0, mylist) == 0
 
 
 def parens_update(current_output, next_input):
@@ -59,7 +60,18 @@ def parens_update(current_output, next_input):
       the updated value of `current_output`
     """
     ###TODO
-    pass
+    # checks if the current the parentheses are balanced by adding or subtracting 1 depending on whether the next parentheses is a left or right one
+    if current_output < 0:
+        return current_output
+    if next_input == '(':
+        return current_output + 1
+    elif next_input == ')':
+        if current_output <= 0:
+            return -1
+        else:
+            return current_output - 1
+    else:
+        return current_output
 
 
 def test_parens_match_iterative():
@@ -69,6 +81,9 @@ def test_parens_match_iterative():
 
 
 #### Scan solution
+
+def add(x, y):
+    return x + y
 
 def parens_match_scan(mylist):
     """
@@ -88,7 +103,11 @@ def parens_match_scan(mylist):
     
     """
     ###TODO
-    pass
+    # 
+    previous, recent = scan(add, 0, list(map(paren_map, mylist)))
+    print(previous, recent)
+    # checks if the parentheses are matched
+    return recent == 0 and reduce(min_f, 0, previous) >= 0
 
 def scan(f, id_, a):
     """
@@ -161,7 +180,26 @@ def parens_match_dc_helper(mylist):
       parens_match_dc to return the final True or False value
     """
     ###TODO
-    pass
+    # creates tuples checking for unmatched left and right parentheses pairs
+    if len(mylist) == 0:
+        return [0,0]
+    elif len(mylist) == 1:
+        # condition for if there's a left parenthese
+        if mylist[0] == '(':
+            return (0, 1)
+        # condition for if there's a right parenthese
+        elif mylist[0] == ')':
+            return (1, 0)
+        # if not, then it's balanced, so (0,0) is returned
+        else:
+            return (0, 0)
+    right1, left1 = parens_match_dc_helper(mylist[:len(mylist)//2])
+    right2, left2 = parens_match_dc_helper(mylist[len(mylist)//2:])
+    
+    if left1 > right2:
+        return (right1, (left1 - right2) + left2)
+    else:
+        return ((right2 - left1) + right1, left2)
     
 
 def test_parens_match_dc():
